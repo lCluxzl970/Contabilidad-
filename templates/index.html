@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IVA Rápido — Sistema de Administración Fiscal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="desktop-app-frame">
+        <!-- Barra Lateral ERP -->
+        <aside class="app-sidebar">
+            <div class="sidebar-header">
+                <div class="app-brand-logo">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <rect x="3" y="3" width="18" height="18" rx="1.5"/>
+                        <line x1="3" y1="9" x2="21" y2="9"/>
+                        <line x1="9" y1="21" x2="9" y2="9"/>
+                    </svg>
+                </div>
+                <div class="app-brand-details">
+                    <span class="app-name">IVA Rápido</span>
+                    <span class="app-ver">Sistema Contable v1.0</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-menu">
+                <a href="#" class="menu-item active" onclick="cambiarVista('dashboard'); return false;" id="menu-dashboard">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="menu-item" onclick="document.getElementById('fileInput').click(); return false;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                    <span>Cargar Facturas</span>
+                </a>
+                <a href="#" class="menu-item" onclick="cambiarVista('clientes'); return false;" id="menu-clientes">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                    <span>Clientes</span>
+                </a>
+                <a href="#" class="menu-item" onclick="cambiarVista('calculo'); return false;" id="menu-calculo">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                    <span>Cálculo de IVA</span>
+                </a>
+                <a href="#" class="menu-item" onclick="cambiarVista('reportes'); return false;" id="menu-reportes">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    <span>Reportes</span>
+                </a>
+                <a href="#" class="menu-item" onclick="cambiarVista('glosario'); return false;" id="menu-glosario">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    <span>Glosario</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-status-footer">
+                <span class="status-node"><span class="node-dot"></span> Servidor en Línea</span>
+            </div>
+        </aside>
+
+        <!-- Cuerpo Principal -->
+        <div class="app-viewport">
+            <header class="app-top-bar">
+                <div class="top-bar-title">
+                    <h1 id="topBarTitle">Administración y Cálculo de IVA</h1>
+                    <span class="top-bar-sub" id="topBarSub">Módulo de Consolidación de Impuestos Indirectos</span>
+                </div>
+                <div class="top-bar-actions">
+                    <span class="field-label">Periodo Fiscal:</span>
+                    <select id="periodoSelect" class="form-control-sm">
+                        <option value="2026-11">Noviembre 2026</option>
+                        <option value="2026-10">Octubre 2026</option>
+                    </select>
+                </div>
+            </header>
+
+            <div class="desktop-workspace">
+                
+                <!-- Columna Izquierda: Captura -->
+                <section class="workspace-col col-sidebar-tools">
+                    <div class="subpanel-header">
+                        <h2>Captura de Comprobantes</h2>
+                    </div>
+
+                    <div class="subpanel-content">
+                        <div class="drop-zone-compact" id="dropZone">
+                            <svg class="drop-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            <p class="drop-primary-txt">Arrastre comprobantes XML o ZIP</p>
+                            <span class="drop-secondary-txt">o presione para examinar equipo</span>
+                            <input type="file" id="fileInput" multiple accept=".xml,.zip" hidden>
+                            <button class="btn-action-neutral" onclick="document.getElementById('fileInput').click()">Examinar Archivos</button>
+                        </div>
+                        <div id="uploadStatus" class="inline-status-bar" style="display: none;">
+                            <span id="uploadStatusText">Procesando lote...</span>
+                        </div>
+                    </div>
+
+                    <div class="subpanel-header divider-top">
+                        <h2>Lector QR (Pendiente)</h2>
+                    </div>
+
+                    <div class="subpanel-content">
+                        <div class="qr-camera-frame">
+                            <div class="qr-viewport-area">
+                                <span class="camera-off-msg">Módulo deshabilitado</span>
+                            </div>
+                            <button class="btn-action-outline" disabled style="opacity: 0.5;">En desarrollo</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Columna Central: Área Dinámica de Vistas -->
+                <section class="workspace-col col-main-grid">
+                    
+                    <!-- VISTA 1: DASHBOARD / LIBRO DE COMPROBANTES -->
+                    <div id="vista-dashboard" class="vista-modulo active-view">
+                        <div class="subpanel-header flex-header">
+                            <div class="header-group">
+                                <h2>Libro de Comprobantes Fiscales</h2>
+                                <span class="records-tag" id="totalDocumentos">0 comprobantes</span>
+                            </div>
+                            <div class="header-status-summary">
+                                <span class="stat-item">Válidos: <strong id="countProcesados">0</strong></span>
+                                <span class="stat-divider">|</span>
+                                <span class="stat-item">Pendientes: <strong id="countPendientes">0</strong></span>
+                                <span class="stat-divider">|</span>
+                                <span class="stat-item">Errores: <strong id="countRechazados">0</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="grid-toolbar">
+                            <div class="toolbar-search">
+                                <span class="search-icon">🔍</span>
+                                <input type="text" id="tableSearch" placeholder="Filtrar por RFC o Fecha..." onkeyup="filtrarTabla()">
+                            </div>
+                            <div class="toolbar-filters">
+                                <select id="filterEstado" class="form-control-sm" onchange="filtrarTabla()">
+                                    <option value="todos">Todos los Estados</option>
+                                    <option value="Procesado">Procesados</option>
+                                    <option value="Pendiente">Pendientes</option>
+                                    <option value="Rechazado">Rechazados</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid-table-container">
+                            <table class="erp-data-table" id="tablaDocumentosMain">
+                                <thead>
+                                    <tr>
+                                        <th width="90">FECHA</th>
+                                        <th width="80" class="text-center">TIPO</th>
+                                        <th width="150">RFC EMISOR</th>
+                                        <th width="110" class="text-right">SUBTOTAL</th>
+                                        <th width="70" class="text-center">TASA</th>
+                                        <th width="110" class="text-right">MONTO IVA</th>
+                                        <th width="90" class="text-center">ESTADO</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaFacturas">
+                                    <!-- Render dinámico -->
+                                </tbody>
+                            </table>
+
+                            <div id="emptyTableState" class="grid-empty-state" style="display: block;">
+                                <p class="empty-msg-title">Sin registros fiscales cargados</p>
+                                <p class="empty-msg-sub">Importe archivos .XML o paquetes .ZIP para iniciar el desglose de IVA.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid-footer-bar">
+                            <span class="pagination-legend" id="paginationInfo">Mostrando 0 filas</span>
+                            <div class="pagination-actions">
+                                <button class="btn-page-step" disabled>&laquo;</button>
+                                <span class="page-indicator">Pág. 1</span>
+                                <button class="btn-page-step" disabled>&raquo;</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VISTA 2: CLIENTES -->
+                    <div id="vista-clientes" class="vista-modulo" style="display: none; padding: 20px;">
+                        <div class="subpanel-header">
+                            <h2>Directorio de Clientes y Contribuyentes</h2>
+                        </div>
+                        <div class="grid-table-container" style="margin-top: 15px;">
+                            <table class="erp-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>RFC</th>
+                                        <th>RAZÓN SOCIAL</th>
+                                        <th class="text-center">TIPO CONTRIBUYENTE</th>
+                                        <th class="text-right">COMPROBANTES</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaClientes">
+                                    <!-- Render dinámico -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- VISTA 3: CÁLCULO DE IVA -->
+                    <div id="vista-calculo" class="vista-modulo" style="display: none; padding: 20px;">
+                        <div class="subpanel-header">
+                            <h2>Cálculo y Conciliación Fiscal de IVA</h2>
+                        </div>
+                        <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="background: #FAFBFD; padding: 15px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 5px;">Determinación de IVA Trasladado</h3>
+                                <p style="font-size: 11px; color: #4A5568;">Suma acumulada de comprobantes emitidos de ingreso.</p>
+                                <div style="font-size: 20px; font-weight: 700; color: #1F3448; margin-top: 10px;" id="calcTrasladado">$0.00</div>
+                            </div>
+                            <div style="background: #FAFBFD; padding: 15px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 5px;">Determinación de IVA Acreditable</h3>
+                                <p style="font-size: 11px; color: #4A5568;">Suma acumulada de comprobantes recibidos de egreso.</p>
+                                <div style="font-size: 20px; font-weight: 700; color: #31566B; margin-top: 10px;" id="calcAcreditable">$0.00</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px; background: #FAFBFD; padding: 15px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                            <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 12px;">Comparativa Fiscal: IVA Trasladado vs IVA Acreditable</h3>
+                            <div style="height: 220px; position: relative;">
+                                <canvas id="chartBarrasIVA"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VISTA 4: REPORTES -->
+                    <div id="vista-reportes" class="vista-modulo" style="display: none; padding: 20px;">
+                        <div class="subpanel-header">
+                            <h2>Módulo de Reportes e Informes Fiscales</h2>
+                        </div>
+                        <p style="font-size: 12px; color: #4A5568; margin-top: 8px;">Generación e impresión de papeles de trabajo y resúmenes de impuestos acumulados por tasa.</p>
+                        
+                        <div style="margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div style="background: #FAFBFD; padding: 15px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 12px;">Distribución por Tasa de IVA</h3>
+                                <div style="height: 180px; position: relative;">
+                                    <canvas id="chartTasasIVA"></canvas>
+                                </div>
+                            </div>
+                            <div style="background: #FAFBFD; padding: 15px; border: 1px solid #E2E8F0; border-radius: 4px; display: flex; flex-direction: column; justify-content: center;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 10px;">Exportación Contable Oficial</h3>
+                                <p style="font-size: 11px; color: #4A5568; margin-bottom: 15px;">Descargue la cédula fiscal con las sumatorias verificadas o el informe ejecutivo para dirección.</p>
+                                <div style="display: flex; gap: 10px;">
+                                    <button class="btn-action-navy" onclick="exportarPapelTrabajo()" style="flex: 1;">Papel Excel (.xlsx)</button>
+                                    <button class="btn-action-outline" onclick="exportarReportePDF()" style="flex: 1;">Reporte PDF (.pdf)</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VISTA 5: GLOSARIO DE CONCEPTOS FISCALES -->
+                    <div id="vista-glosario" class="vista-modulo" style="display: none; padding: 20px;">
+                        <div class="subpanel-header">
+                            <h2>Glosario de Términos Fiscales y Contables</h2>
+                        </div>
+                        <p style="font-size: 12px; color: #4A5568; margin-top: 6px; margin-bottom: 18px;">Guía conceptual rápida sobre los términos utilizados en la liquidación del IVA en México.</p>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div style="background: #FAFBFD; padding: 14px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 6px;">IVA Trasladado</h3>
+                                <p style="font-size: 11px; color: #4A5568; line-height: 1.4;">Impuesto cobrado a clientes en comprobantes de <b>Ingreso (I)</b>. Representa un monto retenido temporalmente que debe ser reportado a la autoridad fiscal.</p>
+                            </div>
+
+                            <div style="background: #FAFBFD; padding: 14px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 6px;">IVA Acreditable</h3>
+                                <p style="font-size: 11px; color: #4A5568; line-height: 1.4;">Impuesto pagado a proveedores en comprobantes de <b>Egreso (E)</b> o gastos deducibles. Este valor se restará del IVA cobrado para determinar el balance final.</p>
+                            </div>
+
+                            <div style="background: #FAFBFD; padding: 14px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 6px;">Comprobante de Ingreso (Tipo 'I')</h3>
+                                <p style="font-size: 11px; color: #4A5568; line-height: 1.4;">Factura electrónica emitida que ampara ventas de bienes, prestación de servicios o arrendamientos que generan ingresos para el contribuyente.</p>
+                            </div>
+
+                            <div style="background: #FAFBFD; padding: 14px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #1F3448; margin-bottom: 6px;">Comprobante de Egreso (Tipo 'E')</h3>
+                                <p style="font-size: 11px; color: #4A5568; line-height: 1.4;">Factura que respalda devoluciones, descuentos, bonificaciones o adquisiciones de bienes y servicios para la operación de la empresa.</p>
+                            </div>
+
+                            <div style="background: #FAFBFD; padding: 14px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #2B6CB0; margin-bottom: 6px;">Saldo a Pagar</h3>
+                                <p style="font-size: 11px; color: #4A5568; line-height: 1.4;">Ocurre cuando el IVA Trasladado supera al IVA Acreditable en el periodo. Representa el monto neto exacto que debe liquidarse ante la autoridad fiscal.</p>
+                            </div>
+
+                            <div style="background: #FAFBFD; padding: 14px; border: 1px solid #E2E8F0; border-radius: 4px;">
+                                <h3 style="font-size: 13px; color: #137333; margin-bottom: 6px;">Saldo a Favor</h3>
+                                <p style="font-size: 11px; color: #4A5568; line-height: 1.4;">Ocurre cuando el IVA Acreditable pagado en gastos supera al IVA cobrado. El contribuyente adquiere el derecho de solicitar su devolución o compensarlo.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <!-- Columna Derecha: Liquidación -->
+                <section class="workspace-col col-sidebar-summary">
+                    <div class="subpanel-header">
+                        <h2>Liquidación de IVA</h2>
+                    </div>
+
+                    <div class="subpanel-content flex-space-between">
+                        <div class="tax-summary-list">
+                            <div class="tax-row">
+                                <div class="tax-label-group">
+                                    <span class="tax-title">IVA TRASLADADO</span>
+                                    <small class="tax-sub">Cobrado (Ingresos)</small>
+                                </div>
+                                <span class="tax-value" id="txtTrasladado">$0.00</span>
+                            </div>
+
+                            <div class="tax-row">
+                                <div class="tax-label-group">
+                                    <span class="tax-title">IVA ACREDITABLE</span>
+                                    <small class="tax-sub">Pagado (Egresos)</small>
+                                </div>
+                                <span class="tax-value" id="txtAcreditable">$0.00</span>
+                            </div>
+
+                            <div class="tax-row highlight-row" id="rowSaldoNeto">
+                                <div class="tax-label-group">
+                                    <span class="tax-title" id="lblSaldoTitulo">SALDO A PAGAR</span>
+                                    <small class="tax-sub">Determinación Neta</small>
+                                </div>
+                                <span class="tax-value bold-blue" id="txtAPagar">$0.00</span>
+                            </div>
+                        </div>
+
+                        <div class="chart-embed-box">
+                            <span class="chart-legend-heading">Proporción IVA Trasladado / Acreditable</span>
+                            <div class="chart-canvas-container">
+                                <canvas id="ivaChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="export-btn-wrapper">
+                            <button class="btn-action-navy" onclick="exportarPapelTrabajo()">
+                                Exportar Papel de Trabajo (.xlsx)
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

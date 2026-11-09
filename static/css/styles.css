@@ -1,0 +1,402 @@
+/* ==========================================================================
+   SISTEMA DE DISEÑO ERP DE ESCRITORIO — IVA RÁPIDO
+   ========================================================================== */
+:root {
+    --navy-dark: #1F3448;      /* Fondo de menú principal y cabeceras de acción */
+    --navy-petroleum: #31566B; /* Color institucional secundario e interacciones */
+    --bg-app: #F3F5F7;         /* Fondo neutral gris contable */
+    --surface-white: #FFFFFF;  /* Lienzo principal */
+    --border-grid: #DCE2E8;    /* Divisores de cuadrícula de 1px */
+    --text-main: #343A40;      /* Texto de alta legibilidad */
+    --text-muted: #6C757D;     /* Metadatos y etiquetas secundarias */
+    
+    --state-ok-bg: #E6F4EA;
+    --state-ok-txt: #137333;
+    --state-warn-bg: #FEF7E0;
+    --state-warn-txt: #B06000;
+    --state-err-bg: #FCE8E6;
+    --state-err-txt: #C5221F;
+    
+    --font-stack: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: var(--font-stack);
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-main);
+    font-size: 12px;
+    line-height: 1.35;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   ESTRUCTURA DE APLICACIÓN DE ESCRITORIO (APP FRAME)
+   ========================================================================== */
+.desktop-app-frame {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+
+/* Sidebar Lateral Integrada */
+.app-sidebar {
+    width: 210px;
+    background-color: var(--navy-dark);
+    color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    border-right: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-header {
+    padding: 14px 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.app-brand-logo { color: #81A1C1; display: flex; }
+.app-name { font-size: 0.9rem; font-weight: 700; color: #FFFFFF; display: block; }
+.app-ver { font-size: 0.68rem; color: #A0AEC0; display: block; }
+
+.sidebar-menu {
+    padding: 8px 6px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+}
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #CBD5E0;
+    text-decoration: none;
+    padding: 7px 10px;
+    border-radius: 3px;
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.menu-item:hover { background-color: rgba(255, 255, 255, 0.05); color: #FFFFFF; }
+.menu-item.active { background-color: var(--navy-petroleum); color: #FFFFFF; font-weight: 600; }
+
+.sidebar-status-footer {
+    padding: 10px 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    font-size: 0.7rem;
+    color: #A0AEC0;
+}
+
+.status-node { display: flex; align-items: center; gap: 6px; }
+.node-dot { width: 6px; height: 6px; background-color: #48BB78; border-radius: 50%; }
+
+/* Viewport Principal */
+.app-viewport {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg-app);
+    overflow: hidden;
+}
+
+.app-top-bar {
+    background-color: var(--surface-white);
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border-grid);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.app-top-bar h1 { font-size: 1.15rem; font-weight: 700; color: var(--navy-dark); }
+.top-bar-sub { font-size: 0.75rem; color: var(--text-muted); display: block; }
+
+.field-label { font-size: 0.75rem; font-weight: 600; margin-right: 6px; }
+.form-control-sm {
+    padding: 3px 8px;
+    border: 1px solid var(--border-grid);
+    border-radius: 3px;
+    background-color: var(--surface-white);
+    font-size: 0.75rem;
+    color: var(--text-main);
+    outline: none;
+}
+
+/* ==========================================================================
+   DESKTOP WORKSPACE (ESTRUCTURA CONTINUA UNIFICADA POR LÍNEAS DE 1PX)
+   ========================================================================== */
+.desktop-workspace {
+    display: grid;
+    grid-template-columns: 240px 1fr 260px;
+    flex: 1;
+    overflow: hidden;
+    background-color: var(--border-grid);
+    gap: 1px;
+}
+
+.workspace-col {
+    background-color: var(--surface-white);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.subpanel-header {
+    background-color: #FAFBFD;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-grid);
+}
+
+.subpanel-header h2 { font-size: 0.8rem; font-weight: 700; color: var(--navy-dark); }
+.subpanel-content { padding: 12px; flex: 1; overflow-y: auto; }
+.divider-top { border-top: 1px solid var(--border-grid); }
+
+/* ==========================================================================
+   COLUMNA 1: HERRAMIENTAS DE CAPTURA
+   ========================================================================== */
+.drop-zone-compact {
+    border: 1px dashed #A0AEC0;
+    border-radius: 3px;
+    padding: 14px 8px;
+    text-align: center;
+    background-color: #FAFBFD;
+}
+
+.drop-icon { color: var(--navy-petroleum); margin-bottom: 4px; }
+.drop-primary-txt { font-size: 0.78rem; font-weight: 600; color: var(--text-main); }
+.drop-secondary-txt { font-size: 0.7rem; color: var(--text-muted); display: block; margin-bottom: 8px; }
+
+.inline-status-bar {
+    margin-top: 8px;
+    padding: 5px 8px;
+    background-color: #EDF2F7;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    color: var(--navy-dark);
+}
+
+.qr-camera-frame { display: flex; flex-direction: column; gap: 8px; }
+.qr-viewport-area {
+    height: 90px;
+    background-color: var(--navy-dark);
+    border-radius: 3px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.camera-off-msg { color: #A0AEC0; font-size: 0.7rem; }
+.scan-laser {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #63B3ED;
+    animation: scan 2s infinite linear;
+}
+
+@keyframes scan {
+    0% { top: 0%; }
+    50% { top: 95%; }
+    100% { top: 0%; }
+}
+
+/* ==========================================================================
+   COLUMNA 2: REGISTRO PRINCIPAL DE COMPROBANTES (LIBRO CONTABLE)
+   ========================================================================== */
+.flex-header { display: flex; justify-content: space-between; align-items: center; }
+.header-group { display: flex; align-items: center; gap: 8px; }
+.records-tag { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+
+/* Resumen de Estado Institucional (Texto plano contable) */
+.header-status-summary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+.stat-item {
+    font-weight: 500;
+    color: var(--text-main);
+}
+
+.stat-item strong {
+    font-weight: 700;
+    color: var(--navy-dark);
+}
+
+.stat-divider {
+    color: var(--border-grid);
+    font-size: 0.75rem;
+}
+
+/* Toolbar de Filtros */
+.grid-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: #FAFBFD;
+    border-bottom: 1px solid var(--border-grid);
+    gap: 8px;
+}
+
+.toolbar-search {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background-color: var(--surface-white);
+    border: 1px solid var(--border-grid);
+    border-radius: 3px;
+    padding: 3px 6px;
+    flex: 1;
+}
+
+.toolbar-search input {
+    border: none;
+    outline: none;
+    font-size: 0.75rem;
+    width: 100%;
+}
+
+/* Tabla de Datos Densa */
+.grid-table-container { flex: 1; overflow: auto; background-color: #FFFFFF; }
+.erp-data-table { width: 100%; border-collapse: collapse; text-align: left; }
+
+.erp-data-table th {
+    background-color: #F7FAFC;
+    color: var(--text-muted);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border-grid);
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.erp-data-table td {
+    padding: 6px 10px;
+    font-size: 0.78rem;
+    color: var(--text-main);
+    border-bottom: 1px solid var(--border-grid);
+}
+
+.erp-data-table tbody tr:hover { background-color: #F7FAFC; }
+
+.font-mono { font-family: SFMono-Regular, Consolas, monospace; font-size: 0.75rem; }
+.font-bold { font-weight: 600; }
+
+.badge-flat { padding: 1px 5px; border-radius: 2px; font-size: 0.68rem; font-weight: 600; }
+.badge-flat.ok { background-color: var(--state-ok-bg); color: var(--state-ok-txt); }
+
+.grid-empty-state { padding: 30px; text-align: center; }
+.empty-msg-title { font-size: 0.8rem; font-weight: 600; color: var(--text-main); }
+.empty-msg-sub { font-size: 0.72rem; color: var(--text-muted); margin-top: 2px; }
+
+.grid-footer-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    background-color: #FAFBFD;
+    border-top: 1px solid var(--border-grid);
+}
+
+.pagination-legend { font-size: 0.7rem; color: var(--text-muted); }
+.pagination-actions { display: flex; align-items: center; gap: 6px; }
+.btn-page-step {
+    background-color: var(--surface-white);
+    border: 1px solid var(--border-grid);
+    padding: 2px 6px;
+    border-radius: 2px;
+    font-size: 0.7rem;
+    cursor: pointer;
+}
+.btn-page-step:disabled { opacity: 0.4; cursor: not-allowed; }
+.page-indicator { font-size: 0.7rem; font-weight: 600; }
+
+/* ==========================================================================
+   COLUMNA 3: RESUMEN DE LIQUIDACIÓN FISCAL
+   ========================================================================== */
+.flex-space-between { display: flex; flex-direction: column; justify-content: space-between; height: 100%; }
+
+.tax-summary-list { display: flex; flex-direction: column; gap: 6px; }
+
+.tax-row {
+    background-color: #FAFBFD;
+    border: 1px solid var(--border-grid);
+    padding: 8px 10px;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tax-row.highlight-row { background-color: #EBF8FF; border-color: #BEE3F8; }
+
+.tax-title { font-size: 0.68rem; font-weight: 700; color: var(--text-muted); display: block; }
+.tax-sub { font-size: 0.65rem; color: var(--text-muted); display: block; }
+.tax-value { font-size: 1.1rem; font-weight: 700; color: var(--navy-dark); }
+.tax-value.bold-blue { color: #2B6CB0; }
+
+.chart-embed-box { margin: 12px 0; }
+.chart-legend-heading { font-size: 0.7rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 6px; }
+.chart-canvas-container { height: 135px; position: relative; }
+
+/* Botones de Acción Estándar */
+.btn-action-neutral {
+    background-color: #EDF2F7;
+    color: var(--text-main);
+    border: 1px solid #CBD5E0;
+    padding: 4px 8px;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-action-outline {
+    background: transparent;
+    color: var(--navy-petroleum);
+    border: 1px solid var(--navy-petroleum);
+    padding: 4px;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-action-navy {
+    background-color: var(--navy-dark);
+    color: #FFFFFF;
+    border: none;
+    padding: 8px;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+}
+
+.btn-action-navy:hover { background-color: var(--navy-petroleum); }
+
+.text-right { text-align: right; }
+.text-center { text-align: center; }
